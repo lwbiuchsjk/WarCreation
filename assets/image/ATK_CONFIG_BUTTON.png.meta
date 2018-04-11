@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "b95bdc64-6c9e-4a1f-8bdb-9f57f3d8ca5d",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "ATK_CONFIG_BUTTON": {
+      "ver": "1.0.3",
+      "uuid": "47bc78e3-8401-49b2-a439-2ccd9dbcfae3",
+      "rawTextureUuid": "b95bdc64-6c9e-4a1f-8bdb-9f57f3d8ca5d",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 57,
+      "height": 38,
+      "rawWidth": 57,
+      "rawHeight": 38,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
