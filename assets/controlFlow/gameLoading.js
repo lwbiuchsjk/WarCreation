@@ -7,6 +7,7 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
+var lsb = require("messageModels");
 
 cc.Class({
     extends: cc.Component,
@@ -42,6 +43,38 @@ cc.Class({
             var webSocket = new WebSocket(messageCode.COMMUNICATION_ADDRESS);
             webSocket.onopen = function() {
                 console.log("...websocket begin...");
+                webSocket.send(new lsb.WebMsg(lsb.WebMsg.TYPE_CLASS.CODE_DATA, messageCode.LOAD_UNIT_TEMPLATE).toJSON());
+            }
+            webSocket.onmessage = function(msg) {
+                var paresMsg;
+                try {
+                    paresMsg = new lsb.WebMsg(msg.data);
+                } catch (error) {
+                    console.log(error);
+                    return;
+                }
+                switch (paresMsg.type) {
+                    case lsb.WebMsg.TYPE_CLASS.CODE_DATA : {
+                        console.log(paresMsg.value);
+                        break;
+                    }
+                    case lsb.WebMsg.TYPE_CLASS.UNIT_DATA : {
+                        var troops = {};
+                        for (var iter in paresMsg.value) {
+                            var unit = paresMsg.value[iter].unit;
+                            troops[unit] = paresMsg.value[iter];
+                            delete troops["createdAt"];
+                            delete troops["updatedAt"];
+                        }
+                        armyTemplate.troops = troops;
+                        console.log(armyTemplate.troops);
+                        break;
+                    }
+                    default : {
+                        console.log(paresMsg.type + " type msg with: ");
+                        console.log(paresMsg.value);
+                    }
+                }
             }
             playerNode.getComponent("Player").webSocket = webSocket;
             cc.director.loadScene("userConfigScene");

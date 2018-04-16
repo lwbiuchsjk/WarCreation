@@ -38,7 +38,7 @@ cc.Class({
         if (unitIter != null) {
             for (var iter; iter < this.titledUnit.length; iter++) {
                 if (this.titledUnit[iter] == null) {
-                    this.titledUnit = unitIter;
+                    this.titledUnit[iter] = unitIter;
                     unit.title = iter;
                     break;
                 }

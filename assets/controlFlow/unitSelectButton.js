@@ -19,14 +19,20 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.iter = Number(this.node.name.slice(this.node.name.indexOf("_") + 1, this.node.name.length));
+        this.iter = Number(this.node.name.slice(this.node.name.indexOf("_") + 1, this.node.name.length)) - 1;
         this.troops = cc.find("Canvas/backGround").getComponent("unitConfigScene");
         cc.log(this.iter);
         this.node.on("click", this.selectUnitCallback, this);
+
+        if (this.troops.getBlankUnitIter() === this.iter) {
+            var url = cc.url.raw("resources/image/UNIT_DONE.png");
+            var unitTexture = cc.textureCache.addImage(url);
+            this.node.getComponent(cc.Sprite).spriteFrame = new cc.SpriteFrame(unitTexture);
+        }
     },
 
     start () {
-        cc.log(this.node);
+        
 
     },
 

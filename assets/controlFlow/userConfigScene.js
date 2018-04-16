@@ -15,10 +15,7 @@ var UserConfigScene = cc.Class({
     extends: cc.Component,
 
     properties: {
-        playerID : null,
-        battleID : null,
-        battleProp : null,
-        faction : null,
+        player : null,
         webSocket : null
     },
 
@@ -31,13 +28,7 @@ var UserConfigScene = cc.Class({
             this.node.on("text-changed", this.editPlayerBoxChanged, this);
             this.node.on("editing-return", this.editPlayerBoxReturn, this);
         }
-        if (this.node.name === "battleInput" ) {
-            this.node.on("editing-did-began", this.editPlayerBoxBegin, this);
-            this.node.on("editing-did-ended", this.editPlayerBoxEnd, this);
-            this.node.on("text-changed", this.editPlayerBoxChanged, this);
-            this.node.on("editing-return", this.editBattleBoxReturn, this);
-        }
-        if (this.node.name === "defenceFactionButton" || this.node.name === "attackFactionButton") {
+        if (this.node.name === "defenceFaction" || this.node.name === "attackFaction") {
             this.node.on("click", this.buttonClickCallback, this);
         }
         this.webSocket = cc.director.getScene().getChildByName("gameInfo").getComponent("Player").webSocket;
@@ -85,7 +76,7 @@ var UserConfigScene = cc.Class({
 
     buttonClickCallback : function(event) {
         console.log(event.detail.name);
-        this.faction = faction;
+        this.faction = event.detail.name;
         console.log(this.faction);
 
         this._addNewPlayer();
@@ -96,6 +87,11 @@ var UserConfigScene = cc.Class({
     },
 
     _addNewPlayer : function() {
+        cc.log("...battle id: " + this.battleID + "...");
+        cc.log("...player id: " + this.playerID + "...");
+        cc.log("...faction: " + this.faction + "...");
+
+        
         if (this._checkPlayerInfoReady()) {
             var playerInfo = new lsb.PlayerMsg(this.battleID)
             playerInfo.playerID = this.playerID;
@@ -103,6 +99,10 @@ var UserConfigScene = cc.Class({
             var playerNode = cc.director.getScene().getChildByName("gameInfo").getComponent("Player");
             playerNode.battleProp = this.battleProp;
             playerNode.addNewPlayer(playerInfo);
+
+            cc.log("...ready to config...");
+
+            cc.director.loadScene("unitConfigScene");
         }
     }
 
