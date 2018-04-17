@@ -25,6 +25,8 @@ cc.Class({
         this.node.on("text-changed", this.editPlayerBoxChanged, this);
         this.node.on("editing-return", this.editPlayerBoxReturn, this);
 
+        var self = this;
+
         this.player = cc.find("gameInfo").getComponent("Player");
         this.player.webSocket.onmessage = function(msg) {
             cc.log(msg);
@@ -33,6 +35,7 @@ cc.Class({
                 case lsb.WebMsg.TYPE_CLASS.UNIT_DATA : {
                     cc.log("...get unit data...");
                     cc.log(parsedMsg.value);
+                    self._showButton();
                     break;
                 }
                 default : {
@@ -70,4 +73,22 @@ cc.Class({
 
         this.player.webSocket.send(new lsb.WebMsg(lsb.WebMsg.TYPE_CLASS.PLAYER_DATA, new lsb.PlayerMsg(playerID).getMsg()).toJSON());
     },
+
+    _showButton : function() {
+        var newTroopButton = cc.find("Canvas/newTroop"),
+            createLocalBattle = cc.find("Canvas/createLocalBattle"),
+            createRemoteBattle = cc.find("Canvas/createRemoteBattle"),
+            continueBattle = cc.find("Canvas/continueBattle"),
+            exitBattle = cc.find("Canvas/exitBattle");
+        newTroopButton.opacity = 255;
+        newTroopButton.resumeSystemEvents(true);
+        createLocalBattle.opacity = 255;
+        createLocalBattle.resumeSystemEvents(true);
+        createRemoteBattle.opacity = 255;
+        createRemoteBattle.resumeSystemEvents(true);
+        continueBattle.opacity = 255;
+        continueBattle.resumeSystemEvents(true);
+        exitBattle.opacity = 255;
+        exitBattle.resumeSystemEvents(true);
+    }
 });

@@ -31,11 +31,16 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {},
-
-    start () {
-
+    onLoad () {
+        this.node.on(cc.Node.EventType.MOUSE_UP, this.exitBattleCallback, this);
+        this.node.opacity = 0;
     },
 
-    // update (dt) {},
+    start () {
+        this.node.pauseSystemEvents(true);
+    },
+
+    exitBattleCallback : function() {
+        cc.log("...exit battle...");
+    }
 });

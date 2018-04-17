@@ -13,38 +13,40 @@ cc.Class({
 
     properties: {
         iter : null,
-        troops : null
+        troops : null,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.iter = Number(this.node.name.slice(this.node.name.indexOf("_") + 1, this.node.name.length)) - 1;
+        this.iter = Number(this.node.name.slice(this.node.name.indexOf("_") + 1, this.node.name.length));
         this.troops = cc.find("Canvas/backGround").getComponent("unitConfigScene");
         cc.log(this.iter);
-        this.node.on("click", this.selectUnitCallback, this);
+        this.node.on(cc.Node.EventType.MOUSE_UP, this.selectUnitCallback, this);
 
         if (this.troops.getBlankUnitIter() === this.iter) {
-            var url = cc.url.raw("resources/image/UNIT_DONE.png");
-            var unitTexture = cc.textureCache.addImage(url);
-            this.node.getComponent(cc.Sprite).spriteFrame = new cc.SpriteFrame(unitTexture);
+            this.setUnitImage("ON");
+        } else {
+            this.setUnitImage("OFF");
         }
     },
 
     start () {
-        
-
+    
     },
 
     selectUnitCallback : function(event) {
-        var blankIter = this.troops.getBlankUnitIter;
-        if (blankIter !== this.iter) {
-            var removedUnit = this.troops.removeUnit(this.iter);
-            if (removedUnit != null) {
-                cc.find("Canvas/unitList/" + removedUnit.sequence + "List/" + removedUnit.unit).getComponent("unitConfigButton").clearUnitTitle(this.iter);
-            }
-        }
-    }
+        this.troops.removeUnit(this.iter);
+        this.setUnitImage("ON");
+    },
 
+    setUnitImage : function(FLAG) {
+        /*
+         * @arguments : FLAG = ON/OFF/unit
+         */
+        var url = cc.url.raw("resources/image/UNIT_" + FLAG + ".png");
+        var unitTexture = cc.textureCache.addImage(url);
+        this.node.getComponent(cc.Sprite).spriteFrame = new cc.SpriteFrame(unitTexture);
+    }
     // update (dt) {},
 });

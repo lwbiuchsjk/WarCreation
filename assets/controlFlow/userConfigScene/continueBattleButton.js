@@ -32,12 +32,12 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.node.on(cc.Node.EventType.MOUSE_DOWN, this.continueBattle, this);
+        this.node.on(cc.Node.EventType.MOUSE_UP, this.continueBattle, this);
         this.node.opacity = 0;
     },
 
     start () {
-        //this.node.pauseSystemEvents(true);
+        this.node.pauseSystemEvents(true);
     },
 
     continueBattle : function() {
