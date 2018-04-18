@@ -14,7 +14,7 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        player : null
+        gameInfo : null
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -27,14 +27,19 @@ cc.Class({
 
         var self = this;
 
-        this.player = cc.find("gameInfo").getComponent("Player");
-        this.player.webSocket.onmessage = function(msg) {
+        this.gameInfo = cc.find("gameInfo").getComponent("gameInfo");
+        this.gameInfo.webSocket.onmessage = function(msg) {
             cc.log(msg);
             var parsedMsg = new lsb.WebMsg(msg.data);
             switch(parsedMsg.type) {
                 case lsb.WebMsg.TYPE_CLASS.UNIT_DATA : {
                     cc.log("...get unit data...");
                     cc.log(parsedMsg.value);
+
+                    if (parsedMsg.value.troops != null) {
+                        self.gameInfo.getPlayer().troops = parsedMsg.value.troops;
+                        cc.find("Canvas/troops").getComponent("playerTroopsDisplayer").showPlayerTroops();
+                    }
                     self._showButton();
                     break;
                 }
@@ -45,11 +50,15 @@ cc.Class({
             }
         }
 
-        cc.log(this.player.webSocket);
+        cc.log(this.gameInfo.webSocket);
     },
 
     start () {
-
+        if (this.gameInfo.getPlayer() != null) {
+            this.node.getComponent(cc.EditBox).string = this.gameInfo.getPlayer().playerID;
+            this._activePlayer();
+            this.gameInfo.webSocket.send(new lsb.WebMsg(lsb.WebMsg.TYPE_CLASS.PLAYER_DATA, this.gameInfo.getPlayer().getMsg()).toJSON());            
+        }
     },
 
     editPlayerBoxBegin: function (event) {
@@ -68,10 +77,11 @@ cc.Class({
         var editbox = event.detail;
         console.log("editBoxwas returned !");
         var playerID = editbox.string;
+        this.gameInfo.addNewPlayer(new lsb.PlayerMsg(playerID));
 
-        cc.log(new lsb.PlayerMsg(playerID).getMsg());
-
-        this.player.webSocket.send(new lsb.WebMsg(lsb.WebMsg.TYPE_CLASS.PLAYER_DATA, new lsb.PlayerMsg(playerID).getMsg()).toJSON());
+        cc.log(this.gameInfo.getPlayer());
+        this._activePlayer();
+        this.gameInfo.webSocket.send(new lsb.WebMsg(lsb.WebMsg.TYPE_CLASS.PLAYER_DATA, this.gameInfo.getPlayer().getMsg()).toJSON());
     },
 
     _showButton : function() {
@@ -90,5 +100,9 @@ cc.Class({
         continueBattle.resumeSystemEvents(true);
         exitBattle.opacity = 255;
         exitBattle.resumeSystemEvents(true);
+    },
+
+    _activePlayer : function() {
+        //this.gameInfo.getPlayer().active = lsb.PlayerMsg.STATUS.ACTIVE;
     }
 });

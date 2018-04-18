@@ -57,7 +57,7 @@ cc.Class({
                 unit.life = unit.maxLife;
                 var unitInLine = cc.find("Canvas/troops/unit_" + unitIter).getComponent("selectBlankButton");
                 unitInLine.setUnitImage(unit.unit.toUpperCase());
-                this.troops.addUnit(unit);
+                this.troops.addUnit(unit.toString());
                 for (var iter = 0; iter < this.titledUnit.length; iter++) {
                     // 在这里检查titled unit array是否已满
                     if (this.titledUnit[iter] == null) {

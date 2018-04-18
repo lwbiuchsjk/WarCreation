@@ -33,6 +33,7 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
+        cc.log("\n>>>>>>>>>>>>>>>>>>>>>>>>>>game beagin<<<<<<<<<<<<<<<<<<<<<<<<<\n");
         var playerNode = cc.find("gameInfo");
         cc.game.addPersistRootNode(playerNode);
 
@@ -76,7 +77,7 @@ cc.Class({
                     }
                 }
             }
-            playerNode.getComponent("Player").webSocket = webSocket;
+            playerNode.getComponent("gameInfo").webSocket = webSocket;
             cc.director.loadScene("userConfigScene");
         });
     },

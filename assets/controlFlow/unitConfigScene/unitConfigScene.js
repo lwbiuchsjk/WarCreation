@@ -23,8 +23,8 @@ var unitConfigScene = cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.faction = armyTemplate.faction.attackFaction;
-        cc.find("Canvas/backGround").color = this[this.faction + "Color"];
+        //this.faction = armyTemplate.faction.attackFaction;
+        //cc.find("Canvas/backGround").color = this[this.faction + "Color"];
         this.myTroops = new Array(10);
         this.myTroops.forEach(function(unit) {
             unit = null;
@@ -65,5 +65,9 @@ var unitConfigScene = cc.Class({
         this.myTroops[iter] = null;
         this.currentUnitIter = iter;
     },
+
+    getTroops : function() {
+        return this.myTroops;
+    }
 
 });

@@ -76,7 +76,7 @@ PlayerMsg.prototype = {
     },
 
     set active (value) {
-        if (value == PlayerMsg.SLEEP || value == PlayerMsg.ACTIVE || value == PlayerMsg.IN_FIGHT) {
+        if (value == PlayerMsg.STATUS.SLEEP || value == PlayerMsg.STATUS.ACTIVE || value == PlayerMsg.STATUS.IN_FIGHT) {
             this._active = value;
         } else {
             throw new Error("...player status set wrong...");
@@ -336,7 +336,7 @@ FightProcessMsg.prototype = {
     get round() {
         return this._round;
     },
-    getMsg : function() {
+    getMsg () {
         return {
             battleID : this._battleID,
             driveUnit : this._driveUnit,
@@ -345,7 +345,7 @@ FightProcessMsg.prototype = {
             driveLife : this._driveLife,
             sufferLife : this._sufferLife,
             round : this._round
-        };
+        }
     }
 };
 

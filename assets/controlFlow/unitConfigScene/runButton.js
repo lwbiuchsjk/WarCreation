@@ -8,42 +8,32 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
+var lsb = require("messageModels");
+
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        players : [],
-        battleProp : null,
-        webSocket : null
+        troops : null,
+        gameInfo : null
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-    // onLoad () {},
+    onLoad () {
+        this.troops = cc.find("Canvas/backGround").getComponent("unitConfigScene");
+        this.gameInfo = cc.find("gameInfo").getComponent("gameInfo");
+        this.node.on(cc.Node.EventType.MOUSE_DOWN, this.runButtonCallback, this);
+    },
 
     start () {
 
     },
 
-    addNewPlayer : function(player) {
-        this.players.push(player);
-    },
-
-    checkPlayerNumberLegel : function() {
-        return this.players.length <= 2;
-    },
-
-    getPlayersNumber : function() {
-        return this.players.length;
-    },
-
-    getPlayer : function(iter) {
-        return this.players[iter];
-    },
-
-    getNowPlayer : function() {
-        return this.players[this.players.length - 1];
+    runButtonCallback : function(event) {
+        var troops = this.troops.getTroops();
+        this.gameInfo.getPlayer().troops = troops;
+        cc.director.loadScene("userConfigScene");
     }
-
     // update (dt) {},
 });
