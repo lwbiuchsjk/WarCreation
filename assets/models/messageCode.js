@@ -11,6 +11,6 @@ window.messageCode = {
     LOAD_UNIT_TEMPLATE : "loadUnitTemplate",
     CHECK_PLAYER : "checkPlayer",
     CHECK_BATTLE_PROP : "CHECK_BATTLE_PROP",
-    SET_SINGLE_BATTLE : "setSingleBattle",
-    SET_MULTI_BATTLE : "setMuLtiBattle"
+    SET_LOCAL_BATTLE : "setLocalBattle",
+    SET_REMOTE_BATTLE : "setRemoteBattle"
 };

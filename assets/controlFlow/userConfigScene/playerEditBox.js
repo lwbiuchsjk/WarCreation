@@ -32,15 +32,25 @@ cc.Class({
             cc.log(msg);
             var parsedMsg = new lsb.WebMsg(msg.data);
             switch(parsedMsg.type) {
-                case lsb.WebMsg.TYPE_CLASS.UNIT_DATA : {
+                case lsb.WebMsg.TYPE_CLASS.PLAYER_DATA : {
+                    var playerMsg = parsedMsg.value;
                     cc.log("...get unit data...");
-                    cc.log(parsedMsg.value);
+                    cc.log(playerMsg);
 
-                    if (parsedMsg.value.troops != null) {
-                        self.gameInfo.getPlayer().troops = parsedMsg.value.troops;
+                    if (playerMsg.troops != null) {
+                        self.gameInfo.getPlayer().troops = playerMsg.troops;
                         cc.find("Canvas/troops").getComponent("playerTroopsDisplayer").showPlayerTroops();
+                        if (self.gameInfo.battleID == null) {
+                            // 在这里根据情况展示按钮。事实上还需要查看battleProp。这里简化为local battle的情况。
+                            self._showNewTroops();
+                            self._showAttackButton();
+                        } else {
+                            self._showNewTroops();
+                            self._showDefenceButton();
+                        } 
+                    } else {
+                        self._showNewTroops();
                     }
-                    self._showButton();
                     break;
                 }
                 default : {
@@ -84,18 +94,34 @@ cc.Class({
         this.gameInfo.webSocket.send(new lsb.WebMsg(lsb.WebMsg.TYPE_CLASS.PLAYER_DATA, this.gameInfo.getPlayer().getMsg()).toJSON());
     },
 
-    _showButton : function() {
-        var newTroopButton = cc.find("Canvas/newTroop"),
-            createLocalBattle = cc.find("Canvas/createLocalBattle"),
-            createRemoteBattle = cc.find("Canvas/createRemoteBattle"),
-            continueBattle = cc.find("Canvas/continueBattle"),
-            exitBattle = cc.find("Canvas/exitBattle");
-        newTroopButton.opacity = 255;
-        newTroopButton.resumeSystemEvents(true);
+    _showAttackButton : function() {
+        var createLocalBattle = cc.find("Canvas/createLocalBattle"),
+            createRemoteBattle = cc.find("Canvas/createRemoteBattle");    
         createLocalBattle.opacity = 255;
         createLocalBattle.resumeSystemEvents(true);
-        createRemoteBattle.opacity = 255;
-        createRemoteBattle.resumeSystemEvents(true);
+        //createRemoteBattle.opacity = 255;
+        //createRemoteBattle.resumeSystemEvents(true);
+        
+    },
+
+    _showNewTroops : function() {
+        var newTroopButton = cc.find("Canvas/newTroop");
+        newTroopButton.opacity = 255;
+        newTroopButton.resumeSystemEvents(true);
+    },
+
+    _showDefenceButton : function(attackFaction) {
+        var responseButton = cc.find("Canvas/responseBattle"),
+            attackFaction = cc.find("Canvas/attackFaction");
+        responseButton.resumeSystemEvents(true);
+        responseButton.opacity = 255;
+        attackFaction.opacity = 255;
+        attackFaction.string = attackFaction;
+    },
+
+    _showContinueButton : function() {
+        var continueBattle = cc.find("Canvas/continueBattle"),
+            exitBattle = cc.find("Canvas/exitBattle");
         continueBattle.opacity = 255;
         continueBattle.resumeSystemEvents(true);
         exitBattle.opacity = 255;

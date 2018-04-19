@@ -69,6 +69,8 @@ cc.Class({
                         }
                         armyTemplate.troops = troops;
                         console.log(armyTemplate.troops);
+                        cc.director.loadScene("userConfigScene");
+
                         break;
                     }
                     default : {
@@ -78,7 +80,6 @@ cc.Class({
                 }
             }
             playerNode.getComponent("gameInfo").webSocket = webSocket;
-            cc.director.loadScene("userConfigScene");
         });
     },
 

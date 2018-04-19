@@ -7,12 +7,14 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
+var lsb = require("messageModels");
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
         player : null,
+        battleID : null,
         battleProp : null,
         webSocket : null
     },
@@ -31,7 +33,7 @@ cc.Class({
 
     getPlayer : function() {
         return this.player;
-    }
+    },
 
     // update (dt) {},
 });

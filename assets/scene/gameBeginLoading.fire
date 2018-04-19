@@ -191,6 +191,7 @@
     },
     "_enabled": true,
     "player": null,
+    "battleID": null,
     "battleProp": null,
     "webSocket": null
   }

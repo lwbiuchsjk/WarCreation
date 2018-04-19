@@ -18,7 +18,7 @@ var PlayerMsg = function() {
      * arguments : playerInfo | playerID | playerID - troops
      */
     this._playerID = 0;
-    this._troops = null;
+    this._troops = [];
     this._active = 0;
     this._seperateMark = ";";
 
@@ -31,10 +31,12 @@ var PlayerMsg = function() {
             if (typeof arguments[0] === "string") {
                 this._playerID = arguments[0];
             } else if (typeof arguments[0] === "object" &&
-                "playerID" in arguments[0] && "troops" in arguments[0] && "active" in arguments[0]) {
+                "playerID" in arguments[0] && "troops" in arguments[0] && "active" in arguments[0] && "battleID" in arguments[0] && "faction" in arguments[0]) {
                 this._playerID = arguments[0]["playerID"];
                 this._faction = arguments[0]["faction"];
                 this._troops = arguments[0]["troops"];
+                this._faction = arguments[0]["faction"];
+                this._battleID = arguments[0]["battleID"];
                 this._active = arguments[0].active;
             } else {
                 throw new Error("WRONG play msg format");
@@ -167,9 +169,12 @@ var BattleMsg = function() {
     this._defenceFaction = "";
     switch(arguments.length) {
         case 1 : {
-            if (typeof arguments[0] === "object" && "battleID" in arguments[0] && "battleProp" in arguments[0]) {
+            if (typeof arguments[0] === "object" && "battleID" in arguments[0] && "battleProp" in arguments[0] 
+                && armyTemplate.faction.attackFaction in arguments[0] && armyTemplate.faction.defenceFaction in arguments[0]) {
                 this._battleID = arguments[0]["battleID"];
                 this._battleProp = arguments[0]["battleProp"];
+                this._attackFaction = arguments[0][armyTemplate.faction.attackFaction];
+                this._defenceFaction = arguments[0][armyTemplate.faction.defenceFaction];
             } else {
                 throw new Error("battle config WRONG!!!");
             }

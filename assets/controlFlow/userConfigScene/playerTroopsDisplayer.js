@@ -34,13 +34,24 @@ cc.Class({
             });
             var troops = this.gameInfo.getPlayer().troops;
             var self = this;
+
+            /*
+            var url = cc.url.raw("resources/image/UNIT_" + troops[0].unit.toUpperCase() + ".png");
+            var unitTexture = cc.textureCache.addImage(url);
+            var unitNode = new cc.Node();
+            var unitSprite = unitNode.addComponent(cc.Sprite);
+            unitSprite.spriteFrame = new cc.SpriteFrame(unitTexture);
+            unitNode.setScale(0.666, 0.666);
+            self.node.addChild(unitNode);
+            */
+
             troops.forEach(function(unit, iter) {
                 var url = cc.url.raw("resources/image/UNIT_" + unit.unit.toUpperCase() + ".png");
                 var unitTexture = cc.textureCache.addImage(url);
                 var unitNode = new cc.Node();
                 var unitSprite = unitNode.addComponent(cc.Sprite);
                 unitSprite.spriteFrame = new cc.SpriteFrame(unitTexture);
-                unitNode.setScaleY(0.666);
+                unitNode.setScale(0.666, 0.666);
                 self.node.addChild(unitNode);
                 cc.log(iter);
             })

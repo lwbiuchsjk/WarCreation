@@ -8,30 +8,19 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
+var lsb = require("messageModels");
+
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        gameInfo : null
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
+        this.gameInfo = cc.find("gameInfo").getComponent("gameInfo");
         this.node.on(cc.Node.EventType.MOUSE_UP, this.createBattleCallback, this);
         this.node.opacity = 0;
     },
@@ -40,7 +29,29 @@ cc.Class({
         this.node.pauseSystemEvents(true);
     },
 
-    createBattleCallback : function() {
-        cc.log("..create battle...");
+    createBattleCallback : function(event) {
+        if (this.gameInfo.getPlayer().troops != null && this.gameInfo.battleID == null) {
+            var battleID = this._createBattleID();
+            this.gameInfo.battleID = battleID;
+            this.gameInfo.getPlayer().battleID = battleID;
+            this.gameInfo.battleProp = messageCode.SET_LOCAL_BATTLE;
+            this.gameInfo.getPlayer().faction = armyTemplate.faction.attackFaction;
+
+            var battleMsg = new lsb.BattleMsg(battleID, messageCode.SET_LOCAL_BATTLE);
+            battleMsg.attackFaction = this.gameInfo.getPlayer().playerID;
+            this.gameInfo.webSocket.send(new lsb.WebMsg(lsb.WebMsg.TYPE_CLASS.BATTLE_DATA, battleMsg.getMsg()).toJSON());
+
+            var player = this.gameInfo.getPlayer();
+            cc.log(player);
+            this.gameInfo.addNewPlayer(null);
+            cc.director.loadScene("userConfigScene");
+        } else {
+            throw new Error("...battle / player troops mistake...");
+        }
+    },
+
+    _createBattleID : function() {
+        // 长度为12的整型
+        return Math.floor(Math.random() * Math.pow(10, 12));
     }
 });
